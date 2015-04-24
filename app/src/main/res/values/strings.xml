@@ -3,4 +3,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="settings">Settings</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="settings_location">Location</string>
+    <string name="settings_location_default_val">220125</string>
 </resources>
