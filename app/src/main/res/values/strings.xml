@@ -4,5 +4,6 @@
     <string name="settings">Settings</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="settings_location">Location</string>
-    <string name="settings_location_default_val">220125</string>
+    <string name="settings_location_default_val" traslatable="false">94043</string>
+    <string name="settings_location_key" translatable="false">location</string>
 </resources>
