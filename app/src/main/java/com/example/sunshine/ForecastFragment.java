@@ -1,6 +1,8 @@
 package com.example.sunshine;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -75,7 +77,6 @@ public class ForecastFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String message = mAdapter.getItem(i);
-                //Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra("message", message);
                 startActivity(intent);
@@ -94,7 +95,9 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                mTask.execute("94043");
+                SharedPreferences pref = getActivity().getSharedPreferences("com.example.sunshine_preferences", Activity.MODE_PRIVATE);
+                String location = pref.getString(getResources().getString(R.string.settings_location_key), "");
+                mTask.execute(location);
                 break;
         }
         return super.onOptionsItemSelected(item);
