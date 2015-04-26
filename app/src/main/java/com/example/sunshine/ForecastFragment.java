@@ -55,6 +55,11 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        refreshWeatherData();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
@@ -95,12 +100,16 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                String location = pref.getString(getResources().getString(R.string.settings_location_key), "");
-                mTask.execute(location);
+                refreshWeatherData();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshWeatherData() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = pref.getString(getResources().getString(R.string.settings_location_key), "");
+        mTask.execute(location);
     }
 
     public class FetchWeatherTask extends AsyncTask<String,Void,String[]> {
