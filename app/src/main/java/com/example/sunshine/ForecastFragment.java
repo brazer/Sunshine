@@ -42,8 +42,6 @@ public class ForecastFragment extends Fragment {
 
     private final String LOG_TAG = ForecastFragment.class.getSimpleName();
     private static ArrayAdapter<String> mAdapter;
-    private static ListView mListView;
-    private FetchWeatherTask mTask = new FetchWeatherTask();
 
     public ForecastFragment() {
     }
@@ -56,6 +54,7 @@ public class ForecastFragment extends Fragment {
 
     @Override
     public void onStart() {
+        super.onStart();
         refreshWeatherData();
     }
 
@@ -76,9 +75,9 @@ public class ForecastFragment extends Fragment {
                 R.id.list_item_forecast_textview,
                 mList
         );
-        mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
-        mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        listView.setAdapter(mAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String message = mAdapter.getItem(i);
@@ -109,7 +108,8 @@ public class ForecastFragment extends Fragment {
     private void refreshWeatherData() {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String location = pref.getString(getResources().getString(R.string.settings_location_key), "");
-        mTask.execute(location);
+        String temperature = pref.getString(getResources().getString(R.string.settings_temperature_key), "");
+        new FetchWeatherTask().execute(new String[]{location, temperature});
     }
 
     public class FetchWeatherTask extends AsyncTask<String,Void,String[]> {
@@ -141,7 +141,7 @@ public class ForecastFragment extends Fragment {
                 Uri uri = Uri.parse(BASE_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, strings[0])
                         .appendQueryParameter(FORMAT_PARAM, "json")
-                        .appendQueryParameter(UNITS_PARAM, "metric")
+                        .appendQueryParameter(UNITS_PARAM, strings[1])
                         .appendQueryParameter(DAYS_PARAM, "7")
                         .build();
                 //URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7");

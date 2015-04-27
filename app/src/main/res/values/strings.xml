@@ -6,7 +6,7 @@
     <string name="settings_location">Location</string>
     <string name="settings_location_default_val" traslatable="false">94043</string>
     <string name="settings_location_key" translatable="false">location</string>
-    <string name="settings_temperature_key">temperature</string>
+    <string name="settings_temperature_key" translatable="false">temperature</string>
     <string name="settings_temperature">Temperature</string>
-    <string name="settings_temperature_default_val">metric</string>
+    <string name="settings_temperature_default_val" translatable="false">metric</string>
 </resources>
