@@ -3,9 +3,13 @@ package com.example.sunshine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 public class DetailActivity extends ActionBarActivity {
 
     private static String mMessage;
+    private static ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +32,6 @@ public class DetailActivity extends ActionBarActivity {
         }
         mMessage = (String) getIntent().getCharSequenceExtra("message");
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,7 +62,10 @@ public class DetailActivity extends ActionBarActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
+        private final String LOG_TAG = PlaceholderFragment.class.getSimpleName();
+
         public PlaceholderFragment() {
+            setHasOptionsMenu(true);
         }
 
         @Override
@@ -68,5 +75,31 @@ public class DetailActivity extends ActionBarActivity {
             ((TextView) rootView.findViewById(R.id.text)).setText(mMessage);
             return rootView;
         }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            inflater.inflate(R.menu.menu_detail_fragment, menu);
+            MenuItem menuItem = menu.findItem(R.id.menu_item_share);
+            mShareActionProvider =
+                    (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+            setShareIntent(createShareIntent());
+        }
+
+        private Intent createShareIntent() {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, mMessage + " #SunshineApp");
+            intent.setType("text/plain");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            return intent;
+        }
+
+        private void setShareIntent(Intent shareIntent) {
+            if (mShareActionProvider!=null)
+                mShareActionProvider.setShareIntent(shareIntent);
+            else {
+                Log.d(LOG_TAG, "Share Action Provider is null?");
+            }
+        }
+
     }
 }
