@@ -1,6 +1,5 @@
 package com.example.sunshine.data;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.ContentObserver;
@@ -31,7 +30,6 @@ public class TestUtilities extends AndroidTestCase {
         valueCursor.close();
     }
 
-
     static void validateCurrentRecord(String error, Cursor valueCursor, ContentValues expectedValues) {
         Set<Map.Entry<String, Object>> valueSet = expectedValues.valueSet();
         for (Map.Entry<String, Object> entry : valueSet) {
@@ -44,7 +42,6 @@ public class TestUtilities extends AndroidTestCase {
                     expectedValue + "'. " + error, expectedValue, valueCursor.getString(idx));
         }
     }
-
 
     /*
         Students: Use this to create some default weather values for your database tests.
@@ -62,10 +59,8 @@ public class TestUtilities extends AndroidTestCase {
         weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WIND_SPEED, 5.5);
         weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID, 321);
 
-
         return weatherValues;
     }
-
 
     /*
         Students: You can uncomment this helper function once you have finished creating the
@@ -81,7 +76,6 @@ public class TestUtilities extends AndroidTestCase {
 
         return testValues;
     }
-
 
     /*
         Students: You can uncomment this function once you have finished creating the
@@ -102,7 +96,6 @@ public class TestUtilities extends AndroidTestCase {
         return locationRowId;
     }
 
-
     /*
         Students: The functions we provide inside of TestProvider use this utility class to test
         the ContentObserver callbacks using the PollingCheck class that we grabbed from the Android
@@ -115,19 +108,16 @@ public class TestUtilities extends AndroidTestCase {
         final HandlerThread mHT;
         boolean mContentChanged;
 
-
         static TestContentObserver getTestContentObserver() {
             HandlerThread ht = new HandlerThread("ContentObserverThread");
             ht.start();
             return new TestContentObserver(ht);
         }
 
-
         private TestContentObserver(HandlerThread ht) {
             super(new Handler(ht.getLooper()));
             mHT = ht;
         }
-
 
         // On earlier versions of Android, this onChange method is called
         @Override
@@ -135,12 +125,10 @@ public class TestUtilities extends AndroidTestCase {
             onChange(selfChange, null);
         }
 
-
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             mContentChanged = true;
         }
-
 
         public void waitForNotificationOrFail() {
             // Note: The PollingCheck class is taken from the Android CTS (Compatibility Test Suite).
@@ -156,7 +144,6 @@ public class TestUtilities extends AndroidTestCase {
             mHT.quit();
         }
     }
-
 
     static TestContentObserver getTestContentObserver() {
         return TestContentObserver.getTestContentObserver();
