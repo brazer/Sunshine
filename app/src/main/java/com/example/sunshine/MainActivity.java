@@ -87,8 +87,8 @@ public class MainActivity extends ActionBarActivity {
         SharedPreferences sharedPrefs =
                 PreferenceManager.getDefaultSharedPreferences(this);
         String location = sharedPrefs.getString(
-                getString(R.string.settings_location_key),
-                getString(R.string.settings_location_default_val));
+                getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
 
 
         // Using the URI scheme for showing a location found on a map.  This super-handy
