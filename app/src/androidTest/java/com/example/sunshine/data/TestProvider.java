@@ -194,10 +194,6 @@ public class TestProvider extends AndroidTestCase {
         performing correctly.
      */
     public void testBasicLocationQueries() {
-        // insert our test records into the database
-        WeatherDBHelper dbHelper = new WeatherDBHelper(mContext);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
         ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
         long locationRowId = TestUtilities.insertNorthPoleLocationValues(mContext);
         assertTrue("Unable insert location into the db", locationRowId != -1);
