@@ -4,13 +4,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.sunshine.data.WeatherContract;
@@ -20,10 +23,11 @@ import com.example.sunshine.task.FetchWeatherTask;
  * Author: Anatol Salanevich
  * Date: 05.04.2015
  */
-public class ForecastFragment extends Fragment {
+public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private final String LOG_TAG = ForecastFragment.class.getSimpleName();
-    private static ForecastAdapter mAdapter;
+    private ForecastAdapter mAdapter;
+    private final static int sLoaderId = 0;
 
     public ForecastFragment() {
     }
@@ -43,31 +47,27 @@ public class ForecastFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        Cursor cursor = getCursor();
-        mAdapter = new ForecastAdapter(getActivity(), cursor, 0);
+        mAdapter = new ForecastAdapter(getActivity(), null, 0);
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                /*String message = (String) mAdapter.getItem(i);
+                String message = (String) mAdapter.getItem(i);
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra("message", message);
-                startActivity(intent);*/
+                startActivity(intent);
             }
-        });
+        });*/
         return rootView;
     }
 
-    private Cursor getCursor() {
-        String locationSetting = Utility.getPreferredLocation(getActivity());
-        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
-        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
-                locationSetting, System.currentTimeMillis());
-        return getActivity().getContentResolver().query(
-                weatherForLocationUri, null, null, null, sortOrder);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(sLoaderId, null, this);
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -90,6 +90,28 @@ public class ForecastFragment extends Fragment {
         FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
         String location = Utility.getPreferredLocation(getActivity());
         weatherTask.execute(location);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        Log.d(LOG_TAG, "onCreateLoader");
+        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+        String locationSetting = Utility.getPreferredLocation(getActivity());
+        Uri uri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+                locationSetting, System.currentTimeMillis());
+        return new CursorLoader(getActivity(), uri, null, null, null, sortOrder);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        Log.d(LOG_TAG, "onLoadFinished");
+        mAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        Log.d(LOG_TAG, "onLoadReset");
+        mAdapter.swapCursor(null);
     }
 
 }
