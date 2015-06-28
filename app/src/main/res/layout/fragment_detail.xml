@@ -9,7 +9,7 @@
     tools:context="com.example.sunshine.DetailActivity$PlaceholderFragment">
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/text_detail"
         android:text="Hello"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
