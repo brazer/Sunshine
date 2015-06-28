@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.example.sunshine.ForecastFragment;
 import com.example.sunshine.data.WeatherContract;
 
 import org.json.JSONArray;
@@ -55,8 +56,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
         long locationId;
         Cursor cursor = getCursor(locationSetting);
         if (cursor.moveToFirst()) {
-            int locationIdIndex = cursor.getColumnIndex(WeatherContract.LocationEntry._ID);
-            locationId = cursor.getLong(locationIdIndex);
+            locationId = cursor.getLong(ForecastFragment.COL_WEATHER_ID);
         } else {
             // Otherwise, insert it using the content resolver and the base URI
             ContentValues values = new ContentValues();
@@ -67,8 +67,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
             mContext.getContentResolver().insert(WeatherContract.LocationEntry.CONTENT_URI, values);
             cursor = getCursor(locationSetting);
             cursor.moveToFirst();
-            int locationIdIndex = cursor.getColumnIndex(WeatherContract.LocationEntry._ID);
-            locationId = cursor.getLong(locationIdIndex);
+            locationId = cursor.getLong(ForecastFragment.COL_WEATHER_ID);
         }
         cursor.close();
         return locationId;
