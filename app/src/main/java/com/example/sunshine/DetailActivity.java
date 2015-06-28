@@ -30,7 +30,8 @@ public class DetailActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-        mMessage = (String) getIntent().getCharSequenceExtra("message");
+        Intent intent = getIntent();
+        if (intent!=null) mMessage = intent.getDataString();
     }
 
     @Override
