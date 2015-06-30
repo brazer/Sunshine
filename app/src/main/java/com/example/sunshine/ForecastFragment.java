@@ -63,7 +63,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onStart() {
         super.onStart();
-        updateWeather();
+        //updateWeather();
     }
 
     @Override
@@ -111,6 +111,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onLocationChanged() {
+        updateWeather();
+        getLoaderManager().restartLoader(sLoaderId, null, this);
     }
 
     private void updateWeather() {
