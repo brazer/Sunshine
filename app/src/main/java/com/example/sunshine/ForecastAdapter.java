@@ -45,9 +45,7 @@ public class ForecastAdapter extends CursorAdapter {
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_item_forecast, parent, false);
-
-        return view;
+        return LayoutInflater.from(context).inflate(R.layout.list_item_forecast, parent, false);
     }
 
     /*
@@ -57,8 +55,33 @@ public class ForecastAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         // our view is pretty simple here --- just a text view
         // we'll keep the UI functional with a simple (and slow!) binding.
+        TextView date = (TextView) view.findViewById(R.id.list_item_date_textview);
+        date.setText(getDate(cursor));
+        TextView forecast = (TextView) view.findViewById(R.id.list_item_forecast_textview);
+        forecast.setText(getForecast(cursor));
+        TextView high = (TextView) view.findViewById(R.id.list_item_high_textview);
+        high.setText(getHighTemp(cursor));
+        TextView low = (TextView) view.findViewById(R.id.list_item_low_textview);
+        low.setText(getLowTemp(cursor));
+    }
 
-        TextView tv = (TextView)view;
-        tv.setText(convertCursorRowToUXFormat(cursor));
+    private String getDate(Cursor cursor) {
+        return Utility.formatDate(cursor.getLong(ForecastFragment.COL_WEATHER_DATE));
+    }
+
+    private String getForecast(Cursor cursor) {
+        return cursor.getString(ForecastFragment.COL_WEATHER_DESC);
+    }
+
+    private String getHighTemp(Cursor cursor) {
+        boolean isMetric = Utility.isMetric(mContext);
+        return Utility.formatTemperature(
+                cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP), isMetric);
+    }
+
+    private String getLowTemp(Cursor cursor) {
+        boolean isMetric = Utility.isMetric(mContext);
+        return Utility.formatTemperature(
+                cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP), isMetric);
     }
 }
