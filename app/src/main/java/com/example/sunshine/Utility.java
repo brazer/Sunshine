@@ -141,4 +141,16 @@ public class Utility {
         Date date = new Date(dateInMillis);
         return DateFormat.getDateInstance().format(date);
     }
+
+    static String formatHumidity(Context context, float humidity) {
+        return context.getString(R.string.humidity, humidity) + "%";
+    }
+
+    static String formatPressure(Context context, float pressure) {
+        return context.getString(R.string.pressure, pressure);
+    }
+
+    static String formatWind(Context context, float wind) {
+        return context.getString(R.string.wind, wind);
+    }
 }

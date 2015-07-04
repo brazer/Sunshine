@@ -18,4 +18,7 @@
     </string>
     <string name="tomorrow">Tomorrow</string>
     <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0</string>
+    <string name="humidity">Humidity: <xliff:g id="humidity">%1$s</xliff:g></string>
+    <string name="wind">Wind: <xliff:g id="wind">%1$s</xliff:g> km/H</string>
+    <string name="pressure">Pressure: <xliff:g id="pressure">%1$s</xliff:g> hPa</string>
 </resources>
