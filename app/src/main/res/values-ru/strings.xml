@@ -1,0 +1,24 @@
+<resources xmlns:xliff="http://schemas.android.com/apk/res/android">
+    <string name="app_name">Sunshine</string>
+    <string name="settings">Настройки</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="pref_location_label">Местоположение</string>
+    <string name="pref_location_key" translatable="false">location</string>
+    <string name="pref_location_default" traslatable="false">94043</string>
+    <string name="pref_units_key" translatable="false">units</string>
+    <string name="pref_units_label">Единицы измерения температуры</string>
+    <string name="pref_units_label_metric">Метрический</string>
+    <string name="pref_units_label_imperial">Британский</string>
+    <string name="pref_units_metric" translatable="false">metric</string>
+    <string name="pref_units_imperial" translatable="false">imperial</string>
+    <string name="map_location">Map Location</string>
+    <string name="today">Сегодня</string>
+    <string name="format_full_friendly_date">
+        <xliff:g id="day">%1$s</xliff:g>, <xliff:g id="date">%2$s</xliff:g>
+    </string>
+    <string name="tomorrow">Завтра</string>
+    <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0</string>
+    <string name="humidity">Влажность: <xliff:g id="humidity">%1$s</xliff:g></string>
+    <string name="wind">Ветер: <xliff:g id="wind">%1$s</xliff:g> км/ч</string>
+    <string name="pressure">Давление: <xliff:g id="pressure">%1$s</xliff:g> ГПа</string>
+</resources>

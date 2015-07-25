@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.sunshine" >
 
     <!-- weather_api_key=5e27c6ba3c9f8273c969b85ff75bbd3a -->
@@ -25,7 +26,8 @@
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.sunshine.MainActivity" />
@@ -40,7 +42,8 @@
         </activity>
         <provider
             android:authorities="com.example.android.sunshine.app"
-            android:name=".data.WeatherProvider" />
+            android:name=".data.WeatherProvider"
+            tools:ignore="ExportedContentProvider" />
     </application>
 
 </manifest>
