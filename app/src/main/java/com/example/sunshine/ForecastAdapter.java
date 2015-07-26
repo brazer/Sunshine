@@ -56,11 +56,17 @@ public class ForecastAdapter extends CursorAdapter {
         // our view is pretty simple here --- just a text view
         // we'll keep the UI functional with a simple (and slow!) binding.
         ViewHolder viewHolder = (ViewHolder) view.getTag();
-        viewHolder.iconView.setImageResource(R.mipmap.ic_launcher);
+        int iconRes = Utility.getIconResourceForWeatherCondition(getWeatherId(cursor));
+        if (cursor.isFirst()) iconRes = Utility.getArtResourceForWeatherCondition(getWeatherId(cursor));
+        viewHolder.iconView.setImageResource(iconRes);
         viewHolder.dateView.setText(getDate(cursor));
         viewHolder.descView.setText(getForecast(cursor));
         viewHolder.highView.setText(getHighTemp(cursor));
         viewHolder.lowView.setText(getLowTemp(cursor));
+    }
+
+    private int getWeatherId(Cursor cursor) {
+        return cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
     }
 
     private String getDate(Cursor cursor) {

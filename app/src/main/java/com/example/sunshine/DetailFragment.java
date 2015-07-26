@@ -41,7 +41,8 @@ public class DetailFragment extends Fragment
             WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
             WeatherContract.WeatherEntry.COLUMN_HUMIDITY,
             WeatherContract.WeatherEntry.COLUMN_PRESSURE,
-            WeatherContract.WeatherEntry.COLUMN_WIND_SPEED
+            WeatherContract.WeatherEntry.COLUMN_WIND_SPEED,
+            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID
     };
     static final int COL_WEATHER_ID = 0;
     static final int COL_WEATHER_DATE = 1;
@@ -51,6 +52,7 @@ public class DetailFragment extends Fragment
     static final int COL_WEARTHER_HUMIDITY = 5;
     static final int COL_WEARTHER_PRESSURE = 6;
     static final int COL_WEARTHER_WIND = 7;
+    static final int COL_WEATHER_CONDITION_ID = 8;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -119,7 +121,8 @@ public class DetailFragment extends Fragment
                 getActivity(), cursor.getFloat(COL_WEARTHER_PRESSURE));
         String wind = Utility.formatWind(getActivity(), cursor.getFloat(COL_WEARTHER_WIND));
         ImageView iconView = (ImageView) getView().findViewById(R.id.icon_detail_fragment);
-        iconView.setImageResource(R.mipmap.ic_launcher);
+        int iconResId = Utility.getArtResourceForWeatherCondition(getWeatherId(cursor));
+        iconView.setImageResource(iconResId);
         TextView dateView = (TextView) getView().findViewById(R.id.date_text_view_detail_fragment);
         dateView.setText(dateString);
         TextView descView = (TextView) getView().findViewById(R.id.desc_text_view_detail_fragment);
@@ -137,6 +140,10 @@ public class DetailFragment extends Fragment
         if (mShareActionProvider!=null) {
             mShareActionProvider.setShareIntent(createShareIntent());
         }
+    }
+
+    private int getWeatherId(Cursor cursor) {
+        return cursor.getInt(COL_WEATHER_CONDITION_ID);
     }
 
     @Override
