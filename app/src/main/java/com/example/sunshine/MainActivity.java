@@ -11,8 +11,9 @@ import android.view.MenuItem;
 public class MainActivity extends ActionBarActivity {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
-    private final String FORECASTFRAGMENT_TAG = ForecastFragment.class.getSimpleName();
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
     private String mLocation;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,11 +21,15 @@ public class MainActivity extends ActionBarActivity {
         Log.v(LOG_TAG, "onCreate");
         mLocation = Utility.getPreferredLocation(this);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG)
-                    .commit();
-        }
+
+        if (findViewById(R.id.weather_detail_container) != null) {
+            mTwoPane = true;
+            if (savedInstanceState==null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.weather_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        } else mTwoPane = false;
     }
 
     @Override
@@ -41,7 +46,7 @@ public class MainActivity extends ActionBarActivity {
         if (location!=null && !location.equals(mLocation)) {
             ForecastFragment ff =
                     (ForecastFragment) getSupportFragmentManager().
-                            findFragmentByTag(FORECASTFRAGMENT_TAG);
+                            findFragmentById(R.id.fragment_forecast);
             if (ff!=null) ff.onLocationChanged();
             mLocation = location;
         }
