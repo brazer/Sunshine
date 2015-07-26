@@ -2,6 +2,7 @@ package com.example.sunshine;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -29,9 +30,10 @@ public class DetailFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private final String LOG_TAG = DetailFragment.class.getSimpleName();
-    private final static int sLoaderId = 0;
+    private final static int DETAIL_LOADER = 0;
     private static ShareActionProvider mShareActionProvider;
     private static String mMessage;
+    private Uri mUri;
 
     private final static String[] DETAIL_COLUMNS = {
             WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
@@ -74,6 +76,17 @@ public class DetailFragment extends Fragment
         setShareIntent(createShareIntent());
     }
 
+    public void onLocationChanged(String newLocation) {
+        Uri uri = mUri;
+        if (uri!=null) {
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updateUri =
+                    WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
+            mUri = updateUri;
+            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+        }
+    }
+
     private Intent createShareIntent() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_TEXT, mMessage + " #SunshineApp");
@@ -92,7 +105,7 @@ public class DetailFragment extends Fragment
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(sLoaderId, null, this);
+        getLoaderManager().initLoader(DETAIL_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
