@@ -2,24 +2,12 @@ package com.example.sunshine;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 
-public class DetailActivity extends AppCompatActivity {
-
-    private static String mMessage;
-    private static ShareActionProvider mShareActionProvider;
+public class DetailActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +15,9 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.weather_detail_container, new DetailFragment())
                     .commit();
         }
-        mMessage = (String) getIntent().getCharSequenceExtra("message");
     }
 
     @Override
@@ -57,49 +44,4 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        private final String LOG_TAG = PlaceholderFragment.class.getSimpleName();
-
-        public PlaceholderFragment() {
-            setHasOptionsMenu(true);
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            ((TextView) rootView.findViewById(R.id.text)).setText(mMessage);
-            return rootView;
-        }
-
-        @Override
-        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-            inflater.inflate(R.menu.menu_detail_fragment, menu);
-            MenuItem menuItem = menu.findItem(R.id.menu_item_share);
-            mShareActionProvider =
-                    (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-            setShareIntent(createShareIntent());
-        }
-
-        private Intent createShareIntent() {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_TEXT, mMessage + " #SunshineApp");
-            intent.setType("text/plain");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-            return intent;
-        }
-
-        private void setShareIntent(Intent shareIntent) {
-            if (mShareActionProvider!=null)
-                mShareActionProvider.setShareIntent(shareIntent);
-            else {
-                Log.d(LOG_TAG, "Share Action Provider is null?");
-            }
-        }
-
-    }
 }
