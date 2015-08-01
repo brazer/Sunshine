@@ -31,9 +31,11 @@ public class DetailFragment extends Fragment
 
     private final String LOG_TAG = DetailFragment.class.getSimpleName();
     private final static int DETAIL_LOADER = 0;
-    private static ShareActionProvider mShareActionProvider;
-    private static String mMessage;
-    private Uri mUri;
+    private static final String LOCATION_KEY = "location";
+    private ShareActionProvider mShareActionProvider;
+    private String mForecast;
+    private String mLocation;
+    private String mDateStr;
 
     private final static String[] DETAIL_COLUMNS = {
             WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
@@ -56,6 +58,16 @@ public class DetailFragment extends Fragment
     static final int COL_WEARTHER_WIND = 7;
     static final int COL_WEATHER_CONDITION_ID = 8;
 
+    private ImageView mIconView;
+    private TextView mFriendlyDateView;
+    private TextView mDateView;
+    private TextView mDescriptionView;
+    private TextView mHighTempView;
+    private TextView mLowTempView;
+    private TextView mHumidityView;
+    private TextView mWindView;
+    private TextView mPressureView;
+
     public DetailFragment() {
         setHasOptionsMenu(true);
     }
@@ -63,8 +75,30 @@ public class DetailFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mDateStr = arguments.getString(DetailActivity.DATE_KEY);
+        }
+        if (savedInstanceState != null) {
+            mLocation = savedInstanceState.getString(LOCATION_KEY);
+        }
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        mIconView = (ImageView) rootView.findViewById(R.id.icon_detail_fragment);
+        mDateView = (TextView) rootView.findViewById(R.id.date_text_view_detail_fragment);
+        mFriendlyDateView = (TextView) rootView.findViewById(R.id.detail_day_textview);
+        mDescriptionView = (TextView) rootView.findViewById(R.id.desc_text_view_detail_fragment);
+        mHighTempView = (TextView) rootView.findViewById(R.id.text_view_high_detail_fragment);
+        mLowTempView = (TextView) rootView.findViewById(R.id.low_text_view_detail_fragment);
+        mHumidityView = (TextView) rootView.findViewById(R.id.humidity_text_view);
+        mPressureView = (TextView) rootView.findViewById(R.id.pressure_text_view_detail_fragment);
+        mWindView = (TextView) rootView.findViewById(R.id.wind_text_view_detail_fragment);
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(LOCATION_KEY, mLocation);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -76,20 +110,9 @@ public class DetailFragment extends Fragment
         setShareIntent(createShareIntent());
     }
 
-    public void onLocationChanged(String newLocation) {
-        Uri uri = mUri;
-        if (uri!=null) {
-            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
-            Uri updateUri =
-                    WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
-            mUri = updateUri;
-            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
-        }
-    }
-
     private Intent createShareIntent() {
         Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TEXT, mMessage + " #SunshineApp");
+        intent.putExtra(Intent.EXTRA_TEXT, mForecast + " #SunshineApp");
         intent.setType("text/plain");
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         return intent;
@@ -104,24 +127,43 @@ public class DetailFragment extends Fragment
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Bundle arguments = getArguments();
+        if (arguments != null && arguments.containsKey(DetailActivity.DATE_KEY)
+                && mLocation != null && !mLocation.equals(Utility.getPreferredLocation(getActivity()))) {
+            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+        }
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(DETAIL_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mLocation = savedInstanceState.getString(LOCATION_KEY);
+        }
+        Bundle arguments = getArguments();
+        if (arguments != null && arguments.containsKey(DetailActivity.DATE_KEY)) {
+            getLoaderManager().initLoader(DETAIL_LOADER, null, this);
+        }
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        Intent intent = getActivity().getIntent();
-        if (intent==null || intent.getData() == null) return null;
+        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+        mLocation = Utility.getPreferredLocation(getActivity());
+        Uri weatherForLocationUri =
+                WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(mLocation, mDateStr);
         return new CursorLoader(getActivity(),
-                intent.getData(), DETAIL_COLUMNS, null, null, null);
+                weatherForLocationUri, DETAIL_COLUMNS, null, null, sortOrder);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (!cursor.moveToFirst()) return;
-        String dateString = Utility.getFriendlyDayString(
-                getActivity(), cursor.getLong(COL_WEATHER_DATE));
+        long date = cursor.getLong(COL_WEATHER_DATE);
+        String friendlyDateText = Utility.getDayName(getActivity(), date);
+        String dateText = Utility.getFormattedMonthDay(getActivity(), date);
         String weatherDescription = cursor.getString(COL_WEATHER_DESC);
         boolean isMetric = Utility.isMetric(getActivity());
         String high = Utility.formatTemperature(
@@ -133,23 +175,18 @@ public class DetailFragment extends Fragment
         String pressure = Utility.formatPressure(
                 getActivity(), cursor.getFloat(COL_WEARTHER_PRESSURE));
         String wind = Utility.formatWind(getActivity(), cursor.getFloat(COL_WEARTHER_WIND));
-        ImageView iconView = (ImageView) getView().findViewById(R.id.icon_detail_fragment);
         int iconResId = Utility.getArtResourceForWeatherCondition(getWeatherId(cursor));
-        iconView.setImageResource(iconResId);
-        TextView dateView = (TextView) getView().findViewById(R.id.date_text_view_detail_fragment);
-        dateView.setText(dateString);
-        TextView descView = (TextView) getView().findViewById(R.id.desc_text_view_detail_fragment);
-        descView.setText(weatherDescription);
-        TextView highView = (TextView) getView().findViewById(R.id.text_view_high_detail_fragment);
-        highView.setText(high);
-        TextView lowView = (TextView) getView().findViewById(R.id.low_text_view_detail_fragment);
-        lowView.setText(low);
-        TextView humidityView = (TextView) getView().findViewById(R.id.humidity_text_view);
-        humidityView.setText(humidity);
-        TextView pressureView = (TextView) getView().findViewById(R.id.pressure_text_view_detail_fragment);
-        pressureView.setText(pressure);
-        TextView windView = (TextView) getView().findViewById(R.id.wind_text_view_detail_fragment);
-        windView.setText(wind);
+        mIconView.setImageResource(iconResId);
+        mFriendlyDateView.setText(friendlyDateText);
+        mDateView.setText(dateText);
+        mDescriptionView.setText(weatherDescription);
+        mHighTempView.setText(high);
+        mLowTempView.setText(low);
+        mHumidityView.setText(humidity);
+        mPressureView.setText(pressure);
+        mWindView.setText(wind);
+        // We still need this for the share intent
+        mForecast = String.format("%s - %s - %s/%s", dateText, weatherDescription, high, low);
         if (mShareActionProvider!=null) {
             mShareActionProvider.setShareIntent(createShareIntent());
         }
