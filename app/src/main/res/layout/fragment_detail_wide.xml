@@ -4,6 +4,7 @@
     android:id="@+id/scrollView" >
 
     <LinearLayout
+
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,27 +12,36 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
+        android:gravity="center_horizontal"
         tools:context="com.example.sunshine.DetailActivity$PlaceholderFragment"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/detail_day_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-        <TextView
-            android:id="@+id/date_text_view_detail_fragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginBottom="2dp" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/detail_day_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/date_text_view_detail_fragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_marginBottom="2dp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -82,28 +92,35 @@
 
         </LinearLayout>
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/humidity"
-            android:id="@+id/humidity_text_view"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginBottom="2dp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wind"
-            android:id="@+id/wind_text_view_detail_fragment"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginBottom="2dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/humidity"
+                android:id="@+id/humidity_text_view"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginBottom="2dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pressure"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/pressure_text_view_detail_fragment" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wind"
+                android:id="@+id/wind_text_view_detail_fragment"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginBottom="2dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pressure"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/pressure_text_view_detail_fragment" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

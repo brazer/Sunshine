@@ -21,8 +21,6 @@ import android.widget.ListView;
 import com.example.sunshine.data.WeatherContract;
 import com.example.sunshine.task.FetchWeatherTask;
 
-import java.util.Date;
-
 /**
  * Author: Anatol Salanevich
  * Date: 05.04.2015
@@ -30,9 +28,12 @@ import java.util.Date;
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private final String LOG_TAG = ForecastFragment.class.getSimpleName();
+    private ListView mListView;
     private ForecastAdapter mAdapter;
     private final static int sLoaderId = 0;
     private String mLocation;
+    private int mPosition = ListView.INVALID_POSITION;
+    private final String POSITION_KEY = "position";
     private final static String[] FORECAST_COLUMNS = {
             WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
             WeatherContract.WeatherEntry.COLUMN_DATE,
@@ -72,6 +73,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(POSITION_KEY, mPosition);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -87,15 +94,19 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateView");
+        if (savedInstanceState != null && savedInstanceState.containsKey(POSITION_KEY)) {
+            mPosition = savedInstanceState.getInt(POSITION_KEY);
+        }
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         mAdapter = new ForecastAdapter(getActivity(), null, 0);
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
-        listView.setAdapter(mAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Cursor cursor = mAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(i)) {
+                    mPosition = i;
                     String date = cursor.getString(COL_WEATHER_DATE);
                     mCallback.onItemSelected(date);
                 }
@@ -159,7 +170,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Log.d(LOG_TAG, "onCreateLoader");
-        String startDate = WeatherContract.getDbDateString(new Date());
         String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
         mLocation = Utility.getPreferredLocation(getActivity());
         Uri uri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
@@ -171,6 +181,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         Log.d(LOG_TAG, "onLoadFinished");
         mAdapter.swapCursor(cursor);
+        if (mPosition != ListView.INVALID_POSITION) {
+            mListView.smoothScrollToPosition(mPosition);
+            mListView.setSelection(mPosition);
+        }
     }
 
     @Override
