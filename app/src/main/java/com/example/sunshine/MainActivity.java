@@ -29,11 +29,9 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             }
         } else mTwoPane = false;
 
-        /*ForecastFragment fragment =
-                ((ForecastFragment)getSupportFragmentManager().findFragmentById(R.layout.fragment_main));
-        Bundle args = new Bundle();
-        args.putBoolean("pane", mTwoPane);
-        fragment.setArguments(args);*/
+        ForecastFragment fragment =
+                ((ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast));
+        fragment.setUseTodayLayout(!mTwoPane);
     }
 
     @Override

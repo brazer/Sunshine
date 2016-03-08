@@ -17,14 +17,14 @@ public class ForecastAdapter extends CursorAdapter {
 
     private final int VIEW_TYPE_TODAY = 0;
     private final int VIEW_TYPE_FUTURE_DAY = 1;
-    private boolean isTwoPane;
+    private boolean mUseTodayLayout = true;
 
     public ForecastAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
 
-    public void setTwoPane(boolean isTwoPane) {
-        this.isTwoPane = isTwoPane;
+    public void setUseTodayLayout(boolean useTodayLayout) {
+        mUseTodayLayout = useTodayLayout;
     }
 
     /*
@@ -34,7 +34,9 @@ public class ForecastAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         int viewType = getItemViewType(cursor.getPosition());
         int layoutId = -1;
-        if (viewType==VIEW_TYPE_TODAY) layoutId = R.layout.list_item_forecast_today;
+        if (viewType==VIEW_TYPE_TODAY) {
+            layoutId = R.layout.list_item_forecast_today;
+        }
         else if (viewType==VIEW_TYPE_FUTURE_DAY) layoutId = R.layout.list_item_forecast;
 
         View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
@@ -45,7 +47,7 @@ public class ForecastAdapter extends CursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return (position==0 && isTwoPane) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+        return (position==0 && mUseTodayLayout) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
     }
 
     @Override
@@ -61,8 +63,16 @@ public class ForecastAdapter extends CursorAdapter {
         // our view is pretty simple here --- just a text view
         // we'll keep the UI functional with a simple (and slow!) binding.
         ViewHolder viewHolder = (ViewHolder) view.getTag();
-        int iconRes = Utility.getIconResourceForWeatherCondition(getWeatherId(cursor));
-        if (cursor.isFirst()) iconRes = Utility.getArtResourceForWeatherCondition(getWeatherId(cursor));
+        int viewType = getItemViewType(cursor.getPosition());
+        int iconRes = -1;
+        switch (viewType) {
+            case VIEW_TYPE_TODAY:
+                iconRes = Utility.getArtResourceForWeatherCondition(getWeatherId(cursor));
+                break;
+            case VIEW_TYPE_FUTURE_DAY:
+                iconRes = Utility.getIconResourceForWeatherCondition(getWeatherId(cursor));
+                break;
+        }
         viewHolder.iconView.setImageResource(iconRes);
         viewHolder.dateView.setText(getDate(cursor));
         viewHolder.descView.setText(getForecast(cursor));

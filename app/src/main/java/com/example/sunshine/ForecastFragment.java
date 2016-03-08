@@ -56,6 +56,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_COORD_LONG = 8;
 
     private Callback mCallback;
+    private boolean mUseTodayLayout;
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -87,7 +88,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onStart() {
         super.onStart();
-        updateWeather();
+        //updateWeather();
     }
 
     @Override
@@ -112,7 +113,15 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 mPosition = i;
             }
         });
+        mAdapter.setUseTodayLayout(mUseTodayLayout);
         return rootView;
+    }
+
+    public void setUseTodayLayout(boolean useTodayLayout) {
+        mUseTodayLayout = useTodayLayout;
+        if (mAdapter != null) {
+            mAdapter.setUseTodayLayout(mUseTodayLayout);
+        }
     }
 
     @Override
