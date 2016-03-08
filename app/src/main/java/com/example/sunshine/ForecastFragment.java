@@ -1,6 +1,6 @@
 package com.example.sunshine;
 
-import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -106,10 +106,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Cursor cursor = mAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(i)) {
-                    mPosition = i;
                     String date = cursor.getString(COL_WEATHER_DATE);
                     mCallback.onItemSelected(date);
                 }
+                mPosition = i;
             }
         });
         return rootView;
@@ -138,10 +138,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mCallback = (Callback) activity;
+            mCallback = (Callback) context;
         } catch (ClassCastException ex) {
             Log.e(LOG_TAG, "Activity must be implemented by Callback", ex);
         }
@@ -183,7 +183,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mAdapter.swapCursor(cursor);
         if (mPosition != ListView.INVALID_POSITION) {
             mListView.smoothScrollToPosition(mPosition);
-            mListView.setSelection(mPosition);
         }
     }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -9,31 +10,32 @@
     android:padding="16dp">
 
     <ImageView
+        android:id="@+id/list_item_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/list_item_icon"
-        android:layout_margin="8dp" />
+        android:layout_margin="8dp"
+        tools:src="@mipmap/ic_launcher"/>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingLeft="16dp">
+        android:paddingLeft="16dp" >
 
         <TextView
+            android:id="@+id/list_item_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Tomorrow"
-            android:id="@+id/list_item_date_textview"
+            tools:text="Tomorrow"
             android:padding="8dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
+            tools:text="Small Text"
             android:id="@+id/list_item_forecast_textview"
             android:padding="8dp" />
 
@@ -49,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            tools:text="Medium Text"
             android:id="@+id/list_item_high_textview"
             android:padding="8dp" />
 
@@ -57,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            tools:text="Medium Text"
             android:id="@+id/list_item_low_textview"
             android:padding="8dp" />
 

@@ -3,12 +3,12 @@ package com.example.sunshine;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends ActionBarActivity implements ForecastFragment.Callback {
+public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
@@ -28,6 +28,12 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                         .commit();
             }
         } else mTwoPane = false;
+
+        /*ForecastFragment fragment =
+                ((ForecastFragment)getSupportFragmentManager().findFragmentById(R.layout.fragment_main));
+        Bundle args = new Bundle();
+        args.putBoolean("pane", mTwoPane);
+        fragment.setArguments(args);*/
     }
 
     @Override
