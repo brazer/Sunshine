@@ -177,6 +177,7 @@ public class DetailFragment extends Fragment
         String wind = Utility.formatWind(getActivity(), cursor.getFloat(COL_WEARTHER_WIND));
         int iconResId = Utility.getArtResourceForWeatherCondition(getWeatherId(cursor));
         mIconView.setImageResource(iconResId);
+        mIconView.setContentDescription(weatherDescription);
         mFriendlyDateView.setText(friendlyDateText);
         mDateView.setText(dateText);
         mDescriptionView.setText(weatherDescription);
