@@ -1,5 +1,6 @@
 package com.example.sunshine;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,6 +18,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -192,6 +195,12 @@ public class DetailFragment extends Fragment
         mPressureView.setText(pressure);
         mWindView.setText(wind);
         mWindDirection.updateView(degrees);
+        AccessibilityManager accessibilityManager =
+                (AccessibilityManager) getContext().getSystemService(
+                        Context.ACCESSIBILITY_SERVICE);
+        if (accessibilityManager.isEnabled()) {
+            mWindDirection.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED);
+        }
         // We still need this for the share intent
         mForecast = String.format("%s - %s - %s/%s", dateText, weatherDescription, high, low);
         if (mShareActionProvider!=null) {

@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.accessibility.AccessibilityEvent;
 
 /**
  * Author: Anatol Salanevich
@@ -113,5 +114,11 @@ public class MyView extends View {
                 centerX + radius*(float) Math.sin(mDegrees*3.14/180),
                 centerY - radius*(float) Math.cos(mDegrees*3.14/180),
                 mLinePaint2);
+    }
+
+    @Override
+    public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
+        event.getText().add(String.valueOf(mDegrees));
+        return true;
     }
 }
