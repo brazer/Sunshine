@@ -1,5 +1,7 @@
 package com.example.sunshine;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -89,7 +91,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onStart() {
         super.onStart();
-        updateWeather();
+        //updateWeather();
     }
 
     @Override
@@ -141,10 +143,20 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                updateWeather();
+                //updateWeather();
+                startAlarm();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startAlarm() {
+        Log.i(LOG_TAG, "startAlarm");
+        AlarmManager alarmMng = (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getContext()));
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(), 0 ,intent, PendingIntent.FLAG_ONE_SHOT);
+        alarmMng.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, alarmIntent);
     }
 
     @Override
