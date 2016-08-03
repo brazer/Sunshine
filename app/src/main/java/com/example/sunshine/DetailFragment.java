@@ -46,7 +46,8 @@ public class DetailFragment extends Fragment
             WeatherContract.WeatherEntry.COLUMN_HUMIDITY,
             WeatherContract.WeatherEntry.COLUMN_PRESSURE,
             WeatherContract.WeatherEntry.COLUMN_WIND_SPEED,
-            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID
+            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+            WeatherContract.WeatherEntry.COLUMN_DEGREES
     };
     static final int COL_WEATHER_ID = 0;
     static final int COL_WEATHER_DATE = 1;
@@ -57,6 +58,7 @@ public class DetailFragment extends Fragment
     static final int COL_WEARTHER_PRESSURE = 6;
     static final int COL_WEARTHER_WIND = 7;
     static final int COL_WEATHER_CONDITION_ID = 8;
+    static final int COL_WEATHER_DEGREES = 9;
 
     private ImageView mIconView;
     private TextView mFriendlyDateView;
@@ -67,6 +69,7 @@ public class DetailFragment extends Fragment
     private TextView mHumidityView;
     private TextView mWindView;
     private TextView mPressureView;
+    private MyView mWindDirection;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -92,6 +95,7 @@ public class DetailFragment extends Fragment
         mHumidityView = (TextView) rootView.findViewById(R.id.humidity_text_view);
         mPressureView = (TextView) rootView.findViewById(R.id.pressure_text_view_detail_fragment);
         mWindView = (TextView) rootView.findViewById(R.id.wind_text_view_detail_fragment);
+        mWindDirection = (MyView)rootView.findViewById(R.id.compass);
         return rootView;
     }
 
@@ -175,6 +179,7 @@ public class DetailFragment extends Fragment
         String pressure = Utility.formatPressure(
                 getActivity(), cursor.getFloat(COL_WEARTHER_PRESSURE));
         String wind = Utility.formatWind(getActivity(), cursor.getFloat(COL_WEARTHER_WIND));
+        float degrees = cursor.getFloat(COL_WEATHER_DEGREES);
         int iconResId = Utility.getArtResourceForWeatherCondition(getWeatherId(cursor));
         mIconView.setImageResource(iconResId);
         mIconView.setContentDescription(weatherDescription);
@@ -186,6 +191,7 @@ public class DetailFragment extends Fragment
         mHumidityView.setText(humidity);
         mPressureView.setText(pressure);
         mWindView.setText(wind);
+        mWindDirection.updateView(degrees);
         // We still need this for the share intent
         mForecast = String.format("%s - %s - %s/%s", dateText, weatherDescription, high, low);
         if (mShareActionProvider!=null) {
