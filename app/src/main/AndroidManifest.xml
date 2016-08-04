@@ -45,8 +45,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.sunshine.MainActivity"/>
         </activity>
-        <service android:name=".service.SunshineService"/>
-        <receiver android:name=".service.SunshineService$AlarmReceiver" android:enabled="true"/>
         <!-- SyncAdapter's dummy authentication service -->
         <service
             android:name=".sync.SunshineAuthenticatorService">

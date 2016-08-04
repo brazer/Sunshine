@@ -167,9 +167,9 @@ public class DetailFragment extends Fragment
         String weatherDescription = cursor.getString(COL_WEATHER_DESC);
         boolean isMetric = Utility.isMetric(getActivity());
         String high = Utility.formatTemperature(
-                getActivity(), cursor.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
+                getActivity(), cursor.getDouble(COL_WEATHER_MAX_TEMP));
         String low = Utility.formatTemperature(
-                getActivity(), cursor.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
+                getActivity(), cursor.getDouble(COL_WEATHER_MIN_TEMP));
         String humidity = Utility.formatHumidity(
                 getActivity(), cursor.getFloat(COL_WEARTHER_HUMIDITY));
         String pressure = Utility.formatPressure(
