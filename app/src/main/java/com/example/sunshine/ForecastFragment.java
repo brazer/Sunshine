@@ -1,9 +1,6 @@
 package com.example.sunshine;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,7 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.sunshine.data.WeatherContract;
-import com.example.sunshine.service.SunshineService;
+import com.example.sunshine.sync.SunshineSyncAdapter;
 
 /**
  * Author: Anatol Salanevich
@@ -143,20 +140,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                //updateWeather();
-                startAlarm();
+                updateWeather();
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void startAlarm() {
-        Log.i(LOG_TAG, "startAlarm");
-        AlarmManager alarmMng = (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
-        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getContext()));
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(), 0 ,intent, PendingIntent.FLAG_ONE_SHOT);
-        alarmMng.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, alarmIntent);
     }
 
     @Override
@@ -176,10 +163,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
-        String location = Utility.getPreferredLocation(getActivity());
-        Intent intent = new Intent(getActivity(), SunshineService.class);
-        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, location);
-        getContext().startService(intent);
+        SunshineSyncAdapter.syncImmediately(getContext());
     }
 
     @Override
