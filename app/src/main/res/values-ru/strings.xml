@@ -21,4 +21,11 @@
     <string name="humidity">Влажность: <xliff:g id="humidity">%1$s</xliff:g></string>
     <string name="wind">Ветер: <xliff:g id="wind">%1$s</xliff:g> км/ч</string>
     <string name="pressure">Давление: <xliff:g id="pressure">%1$s</xliff:g> ГПа</string>
+    <!-- Notification Format -->
+    <string name="format_notification">
+    Погода: <xliff:g id="condition">%1$s</xliff:g> Макс.: <xliff:g id="high">%2$s</xliff:g> Мин.: <xliff:g id="low">%3$s</xliff:g>
+    </string>
+    <string name="pref_enable_notifications_label">Уведомления</string>
+    <string name="pref_enable_notifications_true">Включены</string>
+    <string name="pref_enable_notifications_false">Отключены</string>
 </resources>
